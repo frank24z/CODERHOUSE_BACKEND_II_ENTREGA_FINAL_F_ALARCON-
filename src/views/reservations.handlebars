@@ -1,0 +1,18 @@
+<h1>Mis Reservas</h1>
+
+<ul>
+  {{#each reservations}}
+    <li>
+      <strong>{{room.name}}</strong> -
+      Entrada: {{checkInDate}} / Salida: {{checkOutDate}} -
+      Estado: {{status}}
+      {{#if (eq status 'active')}}
+        <form method="POST" action="/api/reservations/{{_id}}/cancel" style="display:inline">
+          <button type="submit">Cancelar</button>
+        </form>
+      {{/if}}
+    </li>
+  {{/each}}
+</ul>
+
+<a href="/rooms">Volver</a>

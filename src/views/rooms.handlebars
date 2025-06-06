@@ -1,0 +1,20 @@
+<h1>Habitaciones</h1>
+
+{{#if (eq user.role 'admin1')}}
+  <h3>Crear habitación</h3>
+  <form method="POST" action="/api/rooms">
+    <input name="name" placeholder="Nombre" required />
+    <input name="description" placeholder="Descripción" />
+    <input name="price" placeholder="Precio" type="number" required />
+    <input name="capacity" placeholder="Capacidad" type="number" required />
+    <button type="submit">Crear</button>
+  </form>
+{{/if}}
+
+<ul>
+  {{#each rooms}}
+    <li><strong>{{name}}</strong> - Capacidad: {{capacity}} - Precio: ${{price}}</li>
+  {{/each}}
+</ul>
+
+<a href="/profile">Volver</a>
