@@ -44,6 +44,9 @@ app.use('/api/reservations', reservationRoutes);
 app.use('/', publicRoutes);
 
 // Conexión a MongoDB
+
+console.log('DEBUG MONGO_URI:', process.env.MONGO_URI);
+
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ Conectado a MongoDB');
