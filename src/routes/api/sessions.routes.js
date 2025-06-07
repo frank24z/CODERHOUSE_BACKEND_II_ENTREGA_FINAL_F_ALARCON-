@@ -37,4 +37,4 @@ router.post('/forgot', requestPasswordReset);
 router.get('/reset-password/:token', showResetForm);
 router.post('/reset-password/:token', resetPassword);
 
-module.exports = router;
+export default router;

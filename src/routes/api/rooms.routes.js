@@ -7,4 +7,4 @@ const router = express.Router();
 router.get('/', authenticateJWT, getRooms);
 router.post('/', authenticateJWT, authorizeRole(['admin1', 'admin2']), createRoom);
 
-module.exports = router;
+export default router;

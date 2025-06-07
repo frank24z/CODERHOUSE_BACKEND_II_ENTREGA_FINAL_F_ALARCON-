@@ -12,4 +12,5 @@ router.post('/', authenticateJWT, createReservation);
 router.get('/mine', authenticateJWT, getMyReservations);
 router.post('/:id/cancel', authenticateJWT, cancelReservation);
 
-module.exports = router;
+export default router;
+

@@ -6,7 +6,8 @@
 </p>
 
 <div class="d-flex justify-content-center mt-4 gap-3">
-  <a href="/rooms" class="btn btn-primary">Ver habitaciones</a>
-  <a href="/login" class="btn btn-outline-success">Iniciar sesión</a>
-  <a href="/register" class="btn btn-outline-primary">Registrarse</a>
+  {{#unless user}}
+    <a href="/login" class="btn btn-outline-success">Iniciar sesión</a>
+    <a href="/register" class="btn btn-outline-primary">Registrarse</a>
+  {{/unless}}
 </div>

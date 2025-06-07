@@ -1,9 +1,8 @@
-const express = require('express');
-const router = express.Router();
-const passport = require('passport');
+import { Router } from 'express';
+const router = Router();
 
 router.get('/', (req, res) => {
-  res.render('home'); // Renderiza tu home.handlebars
+  res.render('home');
 });
 
 router.get('/login', (req, res) => {
@@ -14,6 +13,14 @@ router.get('/register', (req, res) => {
   res.render('register');
 });
 
-// ...el resto de tus rutas
+router.get('/profile', (req, res) => {
+  if (!req.user) return res.redirect('/login');
+  res.render('profile', { user: req.user });
+});
 
-module.exports = router;
+router.get('/my-reservations', (req, res) => {
+  if (!req.user) return res.redirect('/login');
+  res.render('reservations', { user: req.user });
+});
+
+export default router;

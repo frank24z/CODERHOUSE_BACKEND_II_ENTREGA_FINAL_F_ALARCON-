@@ -1,25 +1,13 @@
-const User = require('../dao/models/User');
+import User from '../dao/models/User.js';
 
 class UserRepository {
   async findByEmail(email) {
-    return await User.findOne({ email }).lean();
+    return User.findOne({ email });
   }
-
   async create(userData) {
-    return await User.create(userData);
+    return User.create(userData);
   }
-
-  async findById(id) {
-    return await User.findById(id).lean();
-  }
-
-  async updatePassword(id, newHashedPassword) {
-    return await User.findByIdAndUpdate(id, { password: newHashedPassword });
-  }
-
-  async getAll() {
-    return await User.find().lean();
-  }
+  // Agrega más métodos según tu lógica
 }
 
-module.exports = new UserRepository();
+export default new UserRepository();
