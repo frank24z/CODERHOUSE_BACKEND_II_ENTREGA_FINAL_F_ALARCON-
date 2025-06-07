@@ -1,4 +1,6 @@
 import express from 'express';
+import { getRooms } from '../../controllers/room.controller.js';
+
 const router = express.Router();
 
 // Ruta raíz para la página de inicio
@@ -48,6 +50,12 @@ router.get('/profile', (req, res) => {
 router.get('/my-reservations', (req, res) => {
   if (!req.user) return res.redirect('/login?error=Debes iniciar sesión');
   res.render('reservations', { user: req.user });
+});
+
+// Nueva ruta protegida para habitaciones
+router.get('/rooms', (req, res) => {
+  if (!req.user) return res.redirect('/login?error=Debes iniciar sesión');
+  getRooms(req, res);
 });
 
 export default router;

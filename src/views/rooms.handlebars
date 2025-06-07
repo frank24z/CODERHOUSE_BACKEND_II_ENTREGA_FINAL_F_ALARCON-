@@ -13,7 +13,21 @@
 
 <ul>
   {{#each rooms}}
-    <li><strong>{{name}}</strong> - Capacidad: {{capacity}} - Precio: ${{price}}</li>
+    <li>
+      <strong>{{name}}</strong> - Capacidad: {{capacity}} - Precio: ${{price}}
+
+      {{#if (eq ../user.role 'user')}}
+        <!-- Formulario para reservar -->
+        <form method="POST" action="/api/reservations" style="margin-top: 10px;">
+          <input type="hidden" name="roomId" value="{{_id}}" />
+          <label>Check-in:</label>
+          <input type="date" name="checkInDate" required />
+          <label>Check-out:</label>
+          <input type="date" name="checkOutDate" required />
+          <button type="submit">Reservar</button>
+        </form>
+      {{/if}}
+    </li>
   {{/each}}
 </ul>
 
