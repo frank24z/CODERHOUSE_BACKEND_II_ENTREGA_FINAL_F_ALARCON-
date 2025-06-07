@@ -1,0 +1,6 @@
+Registo - OK 
+Contraseña incorrecta - OK 
+Recuperacion de contraseña - OK
+Restablecer contraseña - OK 
+Inicio de sesion - (corregir)
+Logout - OK

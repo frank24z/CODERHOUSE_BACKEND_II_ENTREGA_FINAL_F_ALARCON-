@@ -1,5 +1,19 @@
-<h1>Recuperar Contraseña</h1>
-<form method="POST" action="/api/sessions/forgot">
-  <input name="email" type="email" placeholder="Tu email" required />
-  <button type="submit">Enviar</button>
+<h2 class="mb-4">Recuperar contraseña</h2>
+
+{{#if error}}
+  <div class="alert alert-danger">{{error}}</div>
+{{/if}}
+
+{{#if success}}
+  <div class="alert alert-success">{{success}}</div>
+{{/if}}
+
+<form action="/api/sessions/forgot" method="POST" class="mb-3">
+  <div class="mb-3">
+    <label for="email" class="form-label">Correo electrónico</label>
+    <input type="email" name="email" id="email" class="form-control" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Enviar enlace</button>
 </form>
+
+<a href="/login">Volver a iniciar sesión</a>

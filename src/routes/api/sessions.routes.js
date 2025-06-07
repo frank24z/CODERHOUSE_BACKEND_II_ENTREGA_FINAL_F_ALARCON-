@@ -12,12 +12,19 @@ import {
 
 const router = Router();
 
-// Login → genera cookie con JWT
-router.post(
-  '/login',
-  passport.authenticate('login', { session: false }),
-  loginUser
-);
+// Login: manejo manual para mostrar mensaje si falla
+router.post('/login', (req, res, next) => {
+  passport.authenticate('login', { session: false }, (err, user, info) => {
+    if (err) return next(err);
+    if (!user) {
+      // Usa el mensaje definido en tu local.strategy.js
+      const msg = info && info.message ? info.message : 'Credenciales inválidas';
+      return res.redirect(`/login?error=${encodeURIComponent(msg)}`);
+    }
+    req.user = user; // para que loginUser pueda acceder a req.user
+    return loginUser(req, res, next);
+  })(req, res, next);
+});
 
 // Register
 router.post('/register', registerUser);

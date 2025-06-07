@@ -5,7 +5,7 @@ export const getJWTStrategy = (passport) => {
   passport.use('jwt', new JWTStrategy({
     jwtFromRequest: ExtractJwt.fromExtractors([
       ExtractJwt.fromAuthHeaderAsBearerToken(),           // Soporte opcional
-      req => req?.cookies?.token                          // Leer desde cookie
+      req => req?.cookies?.jwtCookie                      // Leer desde cookie
     ]),
     secretOrKey: process.env.JWT_SECRET
   }, async (payload, done) => {
