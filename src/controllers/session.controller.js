@@ -3,11 +3,11 @@ import User from '../dao/models/User.js';
 import { createHash, isValidPassword } from '../utils/encryption.js';
 import { sendPasswordResetMail } from '../services/mailing.service.js';
 
-// 🔐 Login (passport local ya autenticó)
+
 export const loginUser = async (req, res) => {
   const user = req.user;
 
-  // Payload con solo los campos esenciales para el token
+ 
   const payload = {
     _id: user._id,
     first_name: user.first_name,
@@ -17,18 +17,18 @@ export const loginUser = async (req, res) => {
     role: user.role
   };
 
-  // Firmamos token con payload plano
+
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
   res
     .cookie('jwtCookie', token, {
       httpOnly: true,
-      maxAge: 3600000 // 1 hora
+      maxAge: 3600000 
     })
     .redirect('/profile');
 };
 
-// 🔐 Estrategia current para obtener usuario actual
+
 export const currentUser = async (req, res) => {
   const user = req.user;
   if (!user) {
@@ -45,12 +45,12 @@ export const currentUser = async (req, res) => {
   res.json({ status: 'success', payload: dto });
 };
 
-// 🔒 Logout elimina cookie y redirige
+
 export const logoutUser = (req, res) => {
   res.clearCookie('jwtCookie').redirect('/');
 };
 
-// 🆕 Registro local con validación de correo existente
+
 export const registerUser = async (req, res) => {
   try {
     const { first_name, last_name, email, age, password } = req.body;
@@ -70,12 +70,12 @@ export const registerUser = async (req, res) => {
     await User.create(newUser);
     res.redirect('/login?success=Usuario registrado con éxito');
   } catch (err) {
-    console.error('❌ Error en el registro:', err);
+    console.error('Error en el registro:', err);
     res.status(500).render('register', { error: 'Error interno' });
   }
 };
 
-// 🛠️ Solicitar recuperación de contraseña
+
 export const requestPasswordReset = async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
@@ -86,20 +86,20 @@ export const requestPasswordReset = async (req, res) => {
     const link = `${req.protocol}://${req.get('host')}/reset-password/${token}`;
 
     await sendPasswordResetMail(email, link);
-    return res.render('requestReset', { success: 'Correo enviado. Revisa tu bandeja de entrada.' });
+    return res.render('requestReset', { success: 'Correo enviado. Revisa tu correo y en spam.' });
   } catch (error) {
     console.error('Error enviando mail:', error);
     return res.render('requestReset', { error: 'Error enviando el correo. Intenta más tarde.' });
   }
 };
 
-// 📝 Mostrar formulario para restablecer contraseña
+
 export const showResetForm = (req, res) => {
   const { token } = req.params;
   res.render('resetPassword', { token });
 };
 
-// 🆕 Restablecer contraseña usando token válido
+
 export const resetPassword = async (req, res) => {
   const { token } = req.params;
   const { password } = req.body;
@@ -110,7 +110,7 @@ export const resetPassword = async (req, res) => {
     if (!user) return res.render('resetPassword', { token, error: 'Token inválido' });
 
     const same = isValidPassword(user, password);
-    if (same) return res.render('resetPassword', { token, error: 'No podés usar la misma contraseña' });
+    if (same) return res.render('resetPassword', { token, error: 'No puedes usar la misma contraseña' });
 
     const newHash = createHash(password);
     await User.findByIdAndUpdate(user._id, { password: newHash });

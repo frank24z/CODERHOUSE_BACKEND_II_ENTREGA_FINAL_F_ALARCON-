@@ -5,12 +5,12 @@ export const getJWTStrategy = (passport) => {
   passport.use('jwt', new JWTStrategy({
     jwtFromRequest: ExtractJwt.fromExtractors([
       ExtractJwt.fromAuthHeaderAsBearerToken(),
-      (req) => req?.cookies?.jwtCookie  // lee token desde cookie llamada 'jwtCookie'
+      (req) => req?.cookies?.jwtCookie  
     ]),
     secretOrKey: process.env.JWT_SECRET
   }, async (payload, done) => {
     try {
-      // Si en el token el usuario está dentro de "user", lo extraemos; si no, usamos el payload directamente
+    
       const userId = payload.user?._id || payload._id;
 
       const user = await User.findById(userId).lean();

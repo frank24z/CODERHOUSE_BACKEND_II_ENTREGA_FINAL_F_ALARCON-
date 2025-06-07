@@ -23,7 +23,7 @@ class UserService {
     if (!user) throw new Error('Usuario no encontrado');
 
     const same = isValidPassword(user, newPassword);
-    if (same) throw new Error('No podés usar la misma contraseña');
+    if (same) throw new Error('No puedes usar la misma contraseña');
 
     const hash = createHash(newPassword);
     await UserRepository.updatePassword(user._id, hash);

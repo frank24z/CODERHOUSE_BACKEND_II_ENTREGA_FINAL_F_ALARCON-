@@ -4,12 +4,12 @@ import Reservation from '../../dao/models/Reservation.js';
 
 const router = express.Router();
 
-// Ruta raíz para la página de inicio
+
 router.get('/', (req, res) => {
   res.render('home');
 });
 
-// GET login con soporte para mensajes
+
 router.get('/login', (req, res) => {
   res.render('login', {
     error: req.query.error,
@@ -17,7 +17,6 @@ router.get('/login', (req, res) => {
   });
 });
 
-// GET register con soporte para mensajes
 router.get('/register', (req, res) => {
   res.render('register', {
     error: req.query.error,
@@ -25,7 +24,6 @@ router.get('/register', (req, res) => {
   });
 });
 
-// GET recuperar contraseña
 router.get('/forgot-password', (req, res) => {
   res.render('requestReset', {
     error: req.query.error,
@@ -33,7 +31,6 @@ router.get('/forgot-password', (req, res) => {
   });
 });
 
-// GET reset password (desde el link del correo)
 router.get('/reset-password/:token', (req, res) => {
   res.render('resetPassword', {
     token: req.params.token,
@@ -42,18 +39,16 @@ router.get('/reset-password/:token', (req, res) => {
   });
 });
 
-// Ruta protegida: perfil
 router.get('/profile', (req, res) => {
   if (!req.user) return res.redirect('/login?error=Debes iniciar sesión');
   res.render('profile', { user: req.user });
 });
 
-// Ruta protegida: habitaciones
 router.get('/rooms', async (req, res) => {
   if (!req.user) return res.redirect('/login?error=Debes iniciar sesión');
 
   try {
-    // Obtener habitaciones como array
+
     const rooms = await getRooms(req, res, true);
     res.render('rooms', { rooms, user: req.user });
   } catch (err) {
@@ -62,7 +57,7 @@ router.get('/rooms', async (req, res) => {
   }
 });
 
-// Ruta protegida: mis reservas
+
 router.get('/my-reservations', async (req, res) => {
   if (!req.user) return res.redirect('/login?error=Debes iniciar sesión');
 

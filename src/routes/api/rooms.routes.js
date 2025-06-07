@@ -7,7 +7,7 @@ const router = Router();
 router.get('/', authenticateJWT, async (req, res) => {
   try {
     const rooms = await Room.find().lean();
-    // Pasamos rooms y user a la vista para que Handlebars lo use
+
     res.render('rooms', { rooms, user: req.user });
   } catch (error) {
     res.status(500).send('Error al cargar habitaciones');
@@ -26,7 +26,7 @@ router.post('/', authenticateJWT, authorizeRole(['admin1']), async (req, res) =>
       createdBy: req.user._id
     });
 
-    res.redirect('/api/rooms'); // Redirigimos para ver la lista actualizada
+    res.redirect('/api/rooms'); 
   } catch (error) {
     res.status(500).send('Error al crear habitación');
   }

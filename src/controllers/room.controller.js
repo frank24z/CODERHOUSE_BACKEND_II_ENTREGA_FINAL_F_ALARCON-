@@ -5,10 +5,10 @@ export const getRooms = async (req, res, returnData = false) => {
     const rooms = await Room.find().lean();
 
     if (returnData) {
-      return rooms; // Devuelve array de habitaciones si se indica
+      return rooms; 
     }
 
-    // Si no, renderiza la vista
+
     res.render('rooms', { rooms, user: req.user });
   } catch (error) {
     console.error('Error al obtener habitaciones:', error);

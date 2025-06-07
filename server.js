@@ -20,23 +20,23 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Inicializar Passport y sus estrategias (local, jwt, etc.)
+
 initPassport();
 app.use(passport.initialize());
 
-// Middlewares básicos para parseo, cookies y archivos estáticos
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(process.cwd(), 'public')));
 
-// Middleware para extraer usuario del JWT en cookie y pasar a vistas
+
 app.use((req, res, next) => {
   const token = req.cookies.jwtCookie;
   if (token) {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      // Aquí asumimos que decoded ES el usuario (no está dentro de decoded.user)
+
       req.user = decoded;
       res.locals.user = req.user;
     } catch {
@@ -50,7 +50,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Configuración de Handlebars con helpers para igualdad y formateo de fecha
+
 app.engine('handlebars', engine({
   helpers: {
     eq: (a, b) => a === b,
@@ -60,22 +60,22 @@ app.engine('handlebars', engine({
 app.set('view engine', 'handlebars');
 app.set('views', path.join(process.cwd(), 'src', 'views'));
 
-// Rutas de API y vistas públicas
+
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/reservations', reservationRoutes);
 app.use('/', publicRoutes);
 
-// Log de URI y conexión a MongoDB
-console.log('DEBUG MONGO_URI:', process.env.MONGO_URI);
+
+//console.log('DEBUG MONGO_URI:', process.env.MONGO_URI);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ Conectado a MongoDB');
     app.listen(PORT, () => {
-      console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+      console.log(`Servidor andando en http://localhost:${PORT}`);
     });
   })
   .catch(err => {
-    console.error('❌ Error al conectar a MongoDB:', err);
+    console.error('Error MongoDB:', err);
   });

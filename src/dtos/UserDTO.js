@@ -4,6 +4,6 @@ export default class UserDTO {
     this.email = email;
     this.role = role;
     this.name = name;
-    // nunca envíes password ni info sensible
+
   }
 }
