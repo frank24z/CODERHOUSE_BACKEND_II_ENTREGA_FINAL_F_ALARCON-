@@ -5,10 +5,10 @@
   <title>Mi Perfil</title>
 </head>
 <body>
-  <h1>Bienvenido, {{first_name}} {{last_name}}</h1>
-  <p><strong>Email:</strong> {{email}}</p>
-  <p><strong>Edad:</strong> {{age}}</p>
-  <p><strong>Rol:</strong> {{role}}</p>
+  <h1>Bienvenido, {{user.first_name}} {{user.last_name}}</h1>
+  <p><strong>Email:</strong> {{user.email}}</p>
+  <p><strong>Edad:</strong> {{user.age}}</p>
+  <p><strong>Rol:</strong> {{user.role}}</p>
 
   <a href="/rooms">Ver habitaciones</a><br />
   <a href="/api/sessions/logout">Cerrar sesión</a>

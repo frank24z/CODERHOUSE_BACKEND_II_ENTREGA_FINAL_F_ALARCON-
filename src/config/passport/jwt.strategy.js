@@ -4,14 +4,19 @@ import User from '../../dao/models/User.js';
 export const getJWTStrategy = (passport) => {
   passport.use('jwt', new JWTStrategy({
     jwtFromRequest: ExtractJwt.fromExtractors([
-      ExtractJwt.fromAuthHeaderAsBearerToken(),           // Soporte opcional
-      req => req?.cookies?.jwtCookie                      // Leer desde cookie
+      ExtractJwt.fromAuthHeaderAsBearerToken(),
+      (req) => req?.cookies?.jwtCookie  // lee token desde cookie llamada 'jwtCookie'
     ]),
     secretOrKey: process.env.JWT_SECRET
   }, async (payload, done) => {
     try {
-      const user = await User.findById(payload.user._id).lean();
+      // Si en el token el usuario está dentro de "user", lo extraemos; si no, usamos el payload directamente
+      const userId = payload.user?._id || payload._id;
+
+      const user = await User.findById(userId).lean();
+
       if (!user) return done(null, false);
+
       return done(null, user);
     } catch (err) {
       return done(err, false);

@@ -36,7 +36,8 @@ app.use((req, res, next) => {
   if (token) {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = decoded.user || decoded; // Soporta el payload como { user } o user directo
+      // Aquí asumimos que decoded ES el usuario (no está dentro de decoded.user)
+      req.user = decoded;
       res.locals.user = req.user;
     } catch {
       req.user = null;

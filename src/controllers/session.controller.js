@@ -6,38 +6,58 @@ import { sendPasswordResetMail } from '../services/mailing.service.js';
 // 🔐 Login (passport local ya autenticó)
 export const loginUser = async (req, res) => {
   const user = req.user;
-  const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+  // Payload con solo los campos esenciales para el token
+  const payload = {
+    _id: user._id,
+    first_name: user.first_name,
+    last_name: user.last_name,
+    email: user.email,
+    age: user.age,
+    role: user.role
+  };
+
+  // Firmamos token con payload plano
+  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
   res
     .cookie('jwtCookie', token, {
       httpOnly: true,
-      maxAge: 3600000
+      maxAge: 3600000 // 1 hora
     })
     .redirect('/profile');
 };
 
-// 🔐 Estrategia current
+// 🔐 Estrategia current para obtener usuario actual
 export const currentUser = async (req, res) => {
-  const { user } = req;
+  const user = req.user;
+  if (!user) {
+    return res.status(401).json({ status: 'error', message: 'No autenticado' });
+  }
+
   const dto = {
     name: `${user.first_name} ${user.last_name}`,
     email: user.email,
+    age: user.age,
     role: user.role
   };
+
   res.json({ status: 'success', payload: dto });
 };
 
-// 🔒 Logout
+// 🔒 Logout elimina cookie y redirige
 export const logoutUser = (req, res) => {
   res.clearCookie('jwtCookie').redirect('/');
 };
 
-// 🆕 Registro local (ruta directa)
+// 🆕 Registro local con validación de correo existente
 export const registerUser = async (req, res) => {
   try {
     const { first_name, last_name, email, age, password } = req.body;
     const exists = await User.findOne({ email });
-    if (exists) return res.status(400).render('register', { error: 'El usuario ya existe' });
+    if (exists) {
+      return res.status(400).render('register', { error: 'El usuario ya existe' });
+    }
 
     const newUser = {
       first_name,
@@ -73,13 +93,13 @@ export const requestPasswordReset = async (req, res) => {
   }
 };
 
-
-// 📝 Mostrar formulario de nueva contraseña
+// 📝 Mostrar formulario para restablecer contraseña
 export const showResetForm = (req, res) => {
   const { token } = req.params;
   res.render('resetPassword', { token });
 };
 
+// 🆕 Restablecer contraseña usando token válido
 export const resetPassword = async (req, res) => {
   const { token } = req.params;
   const { password } = req.body;
@@ -95,13 +115,8 @@ export const resetPassword = async (req, res) => {
     const newHash = createHash(password);
     await User.findByIdAndUpdate(user._id, { password: newHash });
 
-    // Renderizamos la vista con mensaje de éxito
     res.render('resetPassword', { success: 'Contraseña actualizada exitosamente' });
   } catch (err) {
     res.render('resetPassword', { token, error: 'Token inválido o expirado' });
   }
 };
-
-
-
-
