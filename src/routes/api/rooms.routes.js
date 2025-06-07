@@ -1,8 +1,8 @@
-const express = require('express');
-const { getRooms, createRoom } = require('../../controllers/room.controller');
-const { authenticateJWT, authorizeRole } = require('../../middlewares/auth.middleware');
+import { Router } from 'express';
+import { getRooms, createRoom } from '../../controllers/room.controller.js';
+import { authenticateJWT, authorizeRole } from '../../middlewares/auth.middleware.js';
 
-const router = express.Router();
+const router = Router();
 
 router.get('/', authenticateJWT, getRooms);
 router.post('/', authenticateJWT, authorizeRole(['admin1', 'admin2']), createRoom);

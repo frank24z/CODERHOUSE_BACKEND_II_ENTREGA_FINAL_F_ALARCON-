@@ -1,5 +1,5 @@
-const UserRepository = require('../repositories/UserRepository');
-const { createHash, isValidPassword } = require('../utils/encryption');
+import UserRepository from '../repositories/UserRepository.js';
+import { createHash, isValidPassword } from '../utils/encryption.js';
 
 class UserService {
   async register(userData) {
@@ -32,4 +32,4 @@ class UserService {
   }
 }
 
-module.exports = new UserService();
+export default new UserService();

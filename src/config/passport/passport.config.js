@@ -1,10 +1,8 @@
-const passport = require('passport');
-const { getLocalStrategy } = require('./local.strategy');
-const { getJWTStrategy } = require('./jwt.strategy');
+import passport from 'passport';
+import { getLocalStrategy } from './local.strategy.js';
+import { getJWTStrategy } from './jwt.strategy.js';
 
-const initPassport = () => {
+export const initPassport = () => {
   getLocalStrategy(passport);
   getJWTStrategy(passport);
 };
-
-module.exports = { initPassport };

@@ -1,7 +1,7 @@
-const { Strategy: JWTStrategy, ExtractJwt } = require('passport-jwt');
-const User = require('../../dao/models/User');
+import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt';
+import User from '../../dao/models/User.js';
 
-const getJWTStrategy = (passport) => {
+export const getJWTStrategy = (passport) => {
   passport.use('jwt', new JWTStrategy({
     jwtFromRequest: ExtractJwt.fromExtractors([
       ExtractJwt.fromAuthHeaderAsBearerToken(),           // Soporte opcional
@@ -18,5 +18,3 @@ const getJWTStrategy = (passport) => {
     }
   }));
 };
-
-module.exports = { getJWTStrategy };

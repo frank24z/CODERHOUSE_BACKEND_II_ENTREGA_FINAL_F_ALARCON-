@@ -1,8 +1,8 @@
-const { Strategy: LocalStrategy } = require('passport-local');
-const User = require('../../dao/models/User');
-const { isValidPassword } = require('../../utils/encryption');
+import { Strategy as LocalStrategy } from 'passport-local';
+import User from '../../dao/models/User.js';
+import { isValidPassword } from '../../utils/encryption.js';
 
-const getLocalStrategy = (passport) => {
+export const getLocalStrategy = (passport) => {
   passport.use('login', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
@@ -24,5 +24,3 @@ const getLocalStrategy = (passport) => {
     }
   }));
 };
-
-module.exports = { getLocalStrategy };

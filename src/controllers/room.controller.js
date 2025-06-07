@@ -1,11 +1,11 @@
-const Room = require('../dao/models/Room');
+import Room from '../dao/models/Room.js';
 
-const getRooms = async (req, res) => {
+export const getRooms = async (req, res) => {
   const rooms = await Room.find().lean();
   res.render('rooms', { rooms, user: req.user });
 };
 
-const createRoom = async (req, res) => {
+export const createRoom = async (req, res) => {
   const { name, description, price, capacity } = req.body;
   const room = await Room.create({
     name,
@@ -15,9 +15,4 @@ const createRoom = async (req, res) => {
     createdBy: req.user._id
   });
   res.redirect('/rooms');
-};
-
-module.exports = {
-  getRooms,
-  createRoom
 };

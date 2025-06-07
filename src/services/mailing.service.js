@@ -1,4 +1,4 @@
-const nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-const sendPasswordResetMail = async (email, link) => {
+export const sendPasswordResetMail = async (email, link) => {
   await transporter.sendMail({
     from: 'Hotel App <no-reply@hotel.com>',
     to: email,
@@ -18,5 +18,3 @@ const sendPasswordResetMail = async (email, link) => {
            <p>Este enlace expira en 1 hora.</p>`
   });
 };
-
-module.exports = { sendPasswordResetMail };

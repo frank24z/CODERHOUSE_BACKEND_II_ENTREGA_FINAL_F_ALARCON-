@@ -1,16 +1,15 @@
-const express = require('express');
-const {
+import { Router } from 'express';
+import {
   createReservation,
   cancelReservation,
   getMyReservations
-} = require('../../controllers/reservation.controller');
+} from '../../controllers/reservation.controller.js';
+import { authenticateJWT } from '../../middlewares/auth.middleware.js';
 
-const { authenticateJWT } = require('../../middlewares/auth.middleware');
-const router = express.Router();
+const router = Router();
 
 router.post('/', authenticateJWT, createReservation);
 router.get('/mine', authenticateJWT, getMyReservations);
 router.post('/:id/cancel', authenticateJWT, cancelReservation);
 
 export default router;
-

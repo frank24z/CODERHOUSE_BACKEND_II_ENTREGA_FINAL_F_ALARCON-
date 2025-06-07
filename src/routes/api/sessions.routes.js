@@ -1,6 +1,6 @@
-const express = require('express');
-const passport = require('passport');
-const {
+import { Router } from 'express';
+import passport from 'passport';
+import {
   loginUser,
   currentUser,
   logoutUser,
@@ -8,9 +8,9 @@ const {
   requestPasswordReset,
   showResetForm,
   resetPassword
-} = require('../../controllers/session.controller');
+} from '../../controllers/session.controller.js';
 
-const router = express.Router();
+const router = Router();
 
 // Login → genera cookie con JWT
 router.post(

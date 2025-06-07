@@ -1,12 +1,12 @@
-const jwt = require('jsonwebtoken');
-const User = require('../dao/models/User');
-const { createHash, isValidPassword } = require('../utils/encryption');
-const { sendPasswordResetMail } = require('../services/mailing.service');
+import jwt from 'jsonwebtoken';
+import User from '../dao/models/User.js';
+import { createHash, isValidPassword } from '../utils/encryption.js';
+import { sendPasswordResetMail } from '../services/mailing.service.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // 🔐 Login (passport local ya autenticó)
-const loginUser = async (req, res) => {
+export const loginUser = async (req, res) => {
   const user = req.user;
 
   const token = jwt.sign({ user }, JWT_SECRET, { expiresIn: '1h' });
@@ -20,7 +20,7 @@ const loginUser = async (req, res) => {
 };
 
 // 🔐 Estrategia current
-const currentUser = async (req, res) => {
+export const currentUser = async (req, res) => {
   const { user } = req;
   const dto = {
     name: `${user.first_name} ${user.last_name}`,
@@ -32,12 +32,12 @@ const currentUser = async (req, res) => {
 };
 
 // 🔒 Logout
-const logoutUser = (req, res) => {
+export const logoutUser = (req, res) => {
   res.clearCookie('jwtCookie').redirect('/');
 };
 
 // 🆕 Registro local (ruta directa)
-const registerUser = async (req, res) => {
+export const registerUser = async (req, res) => {
   try {
     const { first_name, last_name, email, age, password } = req.body;
     const exists = await User.findOne({ email });
@@ -60,7 +60,7 @@ const registerUser = async (req, res) => {
 };
 
 // 🛠️ Solicitar recuperación de contraseña
-const requestPasswordReset = async (req, res) => {
+export const requestPasswordReset = async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
   if (!user) return res.send('Usuario no encontrado');
@@ -73,13 +73,13 @@ const requestPasswordReset = async (req, res) => {
 };
 
 // 📝 Mostrar formulario de nueva contraseña
-const showResetForm = (req, res) => {
+export const showResetForm = (req, res) => {
   const { token } = req.params;
   res.render('resetPassword', { token });
 };
 
 // 🔁 Cambiar contraseña
-const resetPassword = async (req, res) => {
+export const resetPassword = async (req, res) => {
   const { token } = req.params;
   const { password } = req.body;
 
@@ -98,14 +98,4 @@ const resetPassword = async (req, res) => {
   } catch (err) {
     res.status(400).send('Token inválido o expirado');
   }
-};
-
-module.exports = {
-  loginUser,
-  logoutUser,
-  currentUser,
-  registerUser,
-  requestPasswordReset,
-  showResetForm,
-  resetPassword
 };

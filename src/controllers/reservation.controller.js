@@ -1,6 +1,6 @@
-const Reservation = require('../dao/models/Reservation');
+import Reservation from '../dao/models/Reservation.js';
 
-const createReservation = async (req, res) => {
+export const createReservation = async (req, res) => {
   const { roomId, checkInDate, checkOutDate } = req.body;
 
   await Reservation.create({
@@ -13,7 +13,7 @@ const createReservation = async (req, res) => {
   res.redirect('/my-reservations');
 };
 
-const cancelReservation = async (req, res) => {
+export const cancelReservation = async (req, res) => {
   const { id } = req.params;
 
   const reservation = await Reservation.findOne({ _id: id, user: req.user._id });
@@ -28,16 +28,10 @@ const cancelReservation = async (req, res) => {
   res.redirect('/my-reservations');
 };
 
-const getMyReservations = async (req, res) => {
+export const getMyReservations = async (req, res) => {
   const reservations = await Reservation.find({ user: req.user._id })
     .populate('room')
     .lean();
 
   res.render('reservations', { reservations });
-};
-
-module.exports = {
-  createReservation,
-  cancelReservation,
-  getMyReservations
 };
