@@ -71,7 +71,7 @@ app.use('/', publicRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    console.log('✅ Conectado a MongoDB');
+    console.log('Conectado a MongoDB');
     app.listen(PORT, () => {
       console.log(`Servidor andando en http://localhost:${PORT}`);
     });
