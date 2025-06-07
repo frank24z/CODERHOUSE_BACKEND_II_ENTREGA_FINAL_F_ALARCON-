@@ -6,6 +6,7 @@ import passport from 'passport';
 import path from 'path';
 import { engine } from 'express-handlebars';
 import jwt from 'jsonwebtoken';
+import moment from 'moment';
 
 import { initPassport } from './src/config/passport/passport.config.js';
 
@@ -19,25 +20,23 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Inicializar passport y estrategias
+// Inicializar Passport y sus estrategias (local, jwt, etc.)
 initPassport();
 app.use(passport.initialize());
 
-// Middlewares base
+// Middlewares básicos para parseo, cookies y archivos estáticos
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(process.cwd(), 'public')));
 
-// Middleware para pasar user a las vistas (JWT en cookie)
+// Middleware para extraer usuario del JWT en cookie y pasar a vistas
 app.use((req, res, next) => {
-  // Usa el mismo nombre que pones en el login (ej: jwtCookie)
   const token = req.cookies.jwtCookie;
   if (token) {
     try {
-      // El decode puede ser { user } o el user directo según cómo lo guardaste
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = decoded.user || decoded; // cubre ambos casos
+      req.user = decoded.user || decoded; // Soporta el payload como { user } o user directo
       res.locals.user = req.user;
     } catch {
       req.user = null;
@@ -50,21 +49,23 @@ app.use((req, res, next) => {
   next();
 });
 
-// Configuración de Handlebars
+// Configuración de Handlebars con helpers para igualdad y formateo de fecha
 app.engine('handlebars', engine({
   helpers: {
-    eq: (a, b) => a === b
+    eq: (a, b) => a === b,
+    formatDate: (date) => moment(date).format('DD/MM/YYYY')
   }
 }));
 app.set('view engine', 'handlebars');
 app.set('views', path.join(process.cwd(), 'src', 'views'));
 
-// Rutas
+// Rutas de API y vistas públicas
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/reservations', reservationRoutes);
 app.use('/', publicRoutes);
 
+// Log de URI y conexión a MongoDB
 console.log('DEBUG MONGO_URI:', process.env.MONGO_URI);
 
 mongoose.connect(process.env.MONGO_URI)
@@ -74,4 +75,6 @@ mongoose.connect(process.env.MONGO_URI)
       console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
     });
   })
-  .catch(err => console.error('❌ Error al conectar a MongoDB:', err));
+  .catch(err => {
+    console.error('❌ Error al conectar a MongoDB:', err);
+  });

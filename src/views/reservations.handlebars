@@ -4,7 +4,7 @@
   {{#each reservations}}
     <li>
       <strong>{{room.name}}</strong> -
-      Entrada: {{checkInDate}} / Salida: {{checkOutDate}} -
+      Entrada: {{formatDate checkInDate}} / Salida: {{formatDate checkOutDate}} -
       Estado: {{status}}
       {{#if (eq status 'active')}}
         <form method="POST" action="/api/reservations/{{_id}}/cancel" style="display:inline">

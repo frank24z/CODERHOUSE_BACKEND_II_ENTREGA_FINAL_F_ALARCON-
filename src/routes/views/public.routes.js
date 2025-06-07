@@ -1,5 +1,6 @@
 import express from 'express';
 import { getRooms } from '../../controllers/room.controller.js';
+import Reservation from '../../dao/models/Reservation.js';
 
 const router = express.Router();
 
@@ -41,21 +42,40 @@ router.get('/reset-password/:token', (req, res) => {
   });
 });
 
-// Rutas protegidas (redirige si no hay user)
+// Ruta protegida: perfil
 router.get('/profile', (req, res) => {
   if (!req.user) return res.redirect('/login?error=Debes iniciar sesión');
   res.render('profile', { user: req.user });
 });
 
-router.get('/my-reservations', (req, res) => {
+// Ruta protegida: habitaciones
+router.get('/rooms', async (req, res) => {
   if (!req.user) return res.redirect('/login?error=Debes iniciar sesión');
-  res.render('reservations', { user: req.user });
+
+  try {
+    // Obtener habitaciones como array
+    const rooms = await getRooms(req, res, true);
+    res.render('rooms', { rooms, user: req.user });
+  } catch (err) {
+    console.error('Error al cargar las habitaciones:', err);
+    res.status(500).send('Error al cargar las habitaciones');
+  }
 });
 
-// Nueva ruta protegida para habitaciones
-router.get('/rooms', (req, res) => {
+// Ruta protegida: mis reservas
+router.get('/my-reservations', async (req, res) => {
   if (!req.user) return res.redirect('/login?error=Debes iniciar sesión');
-  getRooms(req, res);
+
+  try {
+    const reservations = await Reservation.find({ user: req.user._id })
+      .populate('room')
+      .lean();
+
+    res.render('reservations', { reservations, user: req.user });
+  } catch (err) {
+    console.error('Error obteniendo reservas:', err);
+    res.status(500).send('Error al obtener reservas');
+  }
 });
 
 export default router;

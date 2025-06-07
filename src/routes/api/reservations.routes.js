@@ -9,13 +9,13 @@ import { authenticateJWT, authorizeRole } from '../../middlewares/auth.middlewar
 
 const router = Router();
 
-// Solo usuarios autenticados con rol 'user' pueden crear reservas
+// Crear reserva
 router.post('/', authenticateJWT, authorizeRole(['user']), createReservation);
 
-// Obtener mis reservas (usuarios autenticados)
-router.get('/mine', authenticateJWT, getMyReservations);
+// Obtener reservas del usuario (puedes usar simplemente '/' para esto)
+router.get('/', authenticateJWT, getMyReservations);
 
-// Cancelar reserva (usuarios autenticados)
+// Cancelar reserva
 router.post('/:id/cancel', authenticateJWT, authorizeRole(['user']), cancelReservation);
 
 export default router;

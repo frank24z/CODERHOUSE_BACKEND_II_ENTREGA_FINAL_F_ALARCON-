@@ -17,7 +17,6 @@
       <strong>{{name}}</strong> - Capacidad: {{capacity}} - Precio: ${{price}}
 
       {{#if (eq ../user.role 'user')}}
-        <!-- Formulario para reservar -->
         <form method="POST" action="/api/reservations" style="margin-top: 10px;">
           <input type="hidden" name="roomId" value="{{_id}}" />
           <label>Check-in:</label>
